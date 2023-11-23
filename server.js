@@ -121,50 +121,19 @@ app.get('/obtenerMedicamentosOnlywhen', (peticion, respuesta) => {
 
 })
 
-
-app.post('/crearMedicamento', (req, res) => {
-    const { medicamento, dosis, hora, fecha, horario } = req.body;
-
-    // Verificar si la dosis ya existe
-    db.query('SELECT dosis FROM dosis WHERE dosis = ?', [dosis], (errorDosis, resultsDosis) => {
-        if (errorDosis) {
-            console.error("Error al verificar la dosis", errorDosis);
+app.post('/crearMedicamento', (req, res) =>{
+    const {medicamento, dosis, hora, fecha, horario} = req.body
+    db.query('INSERT INTO medicamentos (medicamento, dosis_id, hora, fecha, id_horario) VALUES (?, ?, ?, ?, ?)', [medicamento, dosis, hora, fecha, horario], (error, results) =>{
+        if(error){
+            console.error("Error al agregar medicamento", error)
             res.status(500).json({
-                error: "Error al verificar dosis"
-            });
-        } else if (resultsDosis.length === 0) {
-            res.status(400).json({
-                error: "La dosis no existe"
-            });
-        } else {
-            // Verificar si el horario ya existe
-            db.query('SELECT horario FROM horario WHERE horario = ?', [horario], (errorHorario, resultsHorario) => {
-                if (errorHorario) {
-                    console.error("Error al verificar el horario", errorHorario);
-                    res.status(500).json({
-                        error: "Error al verificar horario"
-                    });
-                } else if (resultsHorario.length === 0) {
-                    res.status(400).json({
-                        error: "El horario no existe"
-                    });
-                } else {
-                    // Finalmente, insertar el medicamento
-                    db.query('INSERT INTO medicamentos (medicamento, dosis_id, hora, fecha, id_horario) VALUES (?, ?, ?, ?, ?)', [medicamento, resultsDosis[0].id, hora, fecha, resultsHorario[0].id], (errorMedicamento, resultsMedicamento) => {
-                        if (errorMedicamento) {
-                            console.error("Error al agregar la medicina", errorMedicamento);
-                            res.status(500).json({
-                                error: "Error al agregar medicina"
-                            });
-                        } else {
-                            res.json({ message: "Medicamento agregado" });
-                        }
-                    });
-                }
-            });
+                error: "Error al agregar medicamento, ERROR 500"
+            })
+        }else{
+            res.json({message: "Medicamento agregado"})
         }
-    });
-});
+    })
+})
 
 app.post('/crearDosis', (req, res) =>{
     const {dosis, medida} = req.body
