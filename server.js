@@ -17,10 +17,10 @@ app.use(cors(
 ))
 
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "medicamentos"
+    host: "mysql-snowy-zero.alwaysdata.net",
+    user: "333373",
+    password: "46154774",
+    database: "snowy-zero_villa"
 })
 
 db.connect(function (error) {
