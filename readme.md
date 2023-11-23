@@ -1,3 +1,4 @@
+hacer npm install
 ejecutar con "node server"
 
 datos para el login
